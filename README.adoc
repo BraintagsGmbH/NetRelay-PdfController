@@ -1,0 +1,3 @@
+= NetRelay-Controller
+
+NetRelay Controller contains controller and processors for NetRelay, which shall be not contained inside the code NetRelay

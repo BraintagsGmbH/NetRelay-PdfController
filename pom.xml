@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>netrelayController</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>netrelayController</name>
+
+	<parent>
+		<groupId>de.braintags</groupId>
+		<artifactId>btVertxBasePOM</artifactId>
+		<version>10-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<netrelay.version>10.0.0-SNAPSHOT</netrelay.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.braintags</groupId>
+			<artifactId>netrelay</artifactId>
+			<version>${netrelay.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.braintags</groupId>
+			<artifactId>netrelay</artifactId>
+			<version>${netrelay.version}</version>
+			<classifier>tests</classifier>
+			<scope>>test</scope>
+		</dependency>
+		
+	    <dependency>
+	      <groupId>log4j</groupId>
+	      <artifactId>log4j</artifactId>
+	      <version>1.2.17</version>
+	      <scope>compile</scope>
+	    </dependency>
+	</dependencies>
+
+	<build>
+		<!-- gradle interopability - avoiding 2 build-directories - you may need 
+			to rebuild your project -->
+		<directory>build</directory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>irgentwatt</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<Main-Class>io.vertx.core.Starter</Main-Class>
+										<Main-Verticle>de.braintags.autobob.web.Main</Main-Verticle>
+									</manifestEntries>
+								</transformer>
+							</transformers>
+							<artifactSet />
+							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
