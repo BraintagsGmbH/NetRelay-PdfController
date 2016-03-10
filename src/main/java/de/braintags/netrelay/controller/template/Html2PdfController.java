@@ -19,6 +19,7 @@ import de.braintags.netrelay.controller.impl.ThymeleafTemplateController;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.ThymeleafTemplateEngine;
@@ -114,7 +115,7 @@ public class Html2PdfController extends AbstractController {
       try {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = new ByteArrayInputStream(htmlText.getBytes());
-        createPdf(out, htmlText);
+        createPdf(getVertx(), out, htmlText, fontsDir);
         future.complete(Buffer.buffer(out.toByteArray()));
       } catch (Exception e) {
         future.fail(e);
@@ -128,18 +129,35 @@ public class Html2PdfController extends AbstractController {
     });
   }
 
-  public static void createPdf(OutputStream out, Buffer htmlText) throws Exception, DocumentException, IOException {
+  /**
+   * Creates a pdf from the given html text
+   * 
+   * @param vertx
+   *          the instance of vertx
+   * @param out
+   *          where to write the pdf
+   * @param htmlText
+   *          the text to be used as source
+   * @param fontsDir
+   *          an optional directory, where ttf or otf files are stored
+   * @throws Exception
+   * @throws DocumentException
+   * @throws IOException
+   */
+  public static void createPdf(Vertx vertx, OutputStream out, Buffer htmlText, String fontsDir)
+      throws Exception, DocumentException, IOException {
     ITextRenderer renderer = new ITextRenderer();
-    // readFonts(renderer);
+    readFonts(vertx, renderer, fontsDir);
     renderer.setDocumentFromString(htmlText.toString());
     renderer.layout();
     renderer.createPDF(out, true);
     out.close();
   }
 
-  private void readFonts(ITextRenderer renderer) throws NoSuchFileException, DocumentException, IOException {
+  private static void readFonts(Vertx vertx, ITextRenderer renderer, String fontsDir)
+      throws NoSuchFileException, DocumentException, IOException {
     if (fontsDir != null) {
-      List<String> children = FileSystemUtil.getChildren(getVertx(), fontsDir,
+      List<String> children = FileSystemUtil.getChildren(vertx, fontsDir,
           child -> child.toLowerCase().endsWith(".otf") || child.toLowerCase().endsWith(".ttf"));
       for (String child : children) {
         renderer.getFontResolver().addFont(child, true);

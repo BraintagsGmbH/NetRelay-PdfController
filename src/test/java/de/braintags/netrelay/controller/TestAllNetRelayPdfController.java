@@ -25,7 +25,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ THtml2PdfController.class })
 
-public class TestAllNetRelayController {
+public class TestAllNetRelayPdfController {
   // -DBlockedThreadCheckInterval=10000000 -DWarningExceptionTime=10000000 -DtestTimeout=5
   // -Djava.util.logging.config.file=src/main/resources/logging.properties
 
