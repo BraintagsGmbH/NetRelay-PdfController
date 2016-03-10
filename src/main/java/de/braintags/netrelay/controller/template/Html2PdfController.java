@@ -54,6 +54,9 @@ import io.vertx.ext.web.templ.ThymeleafTemplateEngine;
  * none
  * <br/>
  * 
+ * further infoprmation on how to create the templates:
+ * http://flyingsaucerproject.github.io/flyingsaucer/r8/guide/users-guide-R8.html#xil_20
+ * 
  * Copyright: Copyright (c) 09.03.2016 <br>
  * Company: Braintags GmbH <br>
  * 

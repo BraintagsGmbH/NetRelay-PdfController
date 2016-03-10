@@ -1,3 +1,3 @@
-= NetRelay-Controller
+= NetRelay-PdfController
 
-NetRelay Controller contains controller and processors for NetRelay, which shall be not contained inside the code NetRelay
+Controllers and processors for NetRelay, which are dealing with pdf.
