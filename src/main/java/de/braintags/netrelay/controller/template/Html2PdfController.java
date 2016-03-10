@@ -2,13 +2,15 @@ package de.braintags.netrelay.controller.template;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
-import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.text.DocumentException;
 
+import de.braintags.io.vertx.util.exception.NoSuchFileException;
+import de.braintags.io.vertx.util.file.FileSystemUtil;
 import de.braintags.netrelay.controller.impl.AbstractController;
 import de.braintags.netrelay.controller.impl.ThymeleafTemplateController;
 import io.vertx.core.AsyncResult;
@@ -36,6 +38,7 @@ import io.vertx.ext.web.templ.ThymeleafTemplateEngine;
  * possible parameters, which are read from the configuration
  * <UL>
  * <LI>{@value #TEMPLATE_NAME_PROP}
+ * <LI>{@value #FONT_PATH_PROP}
  * <LI/>all parameters like defined in {@link ThymeleafTemplateController}
  * </UL>
  * <br>
@@ -64,9 +67,17 @@ public class Html2PdfController extends AbstractController {
    * undefined, the template will be used by using the path of the current request.
    */
   public static final String TEMPLATE_NAME_PROP = "template";
+
+  /**
+   * The property defines the path to a directory, where font definitions are stored as ttf or otf files. All found
+   * definitions are added to the resulting pdf
+   */
+  public static final String FONT_PATH_PROP = "fonts";
+
   private String template;
   private ThymeleafTemplateEngine templateEngine;
   private String templateDirectory;
+  private String fontsDir;
 
   /**
    * 
@@ -109,23 +120,28 @@ public class Html2PdfController extends AbstractController {
   private void createPdf(Buffer htmlText, Future future) {
     try {
       ByteArrayOutputStream os = new ByteArrayOutputStream();
-
       ITextRenderer renderer = new ITextRenderer();
-      ITextFontResolver fontResolver = renderer.getFontResolver();
-
-      // fontResolver.addFont("/src/main/resources/fonts/liberation_serif/LiberationSerif-Regular.ttf",
-      // BaseFont.IDENTITY_H, true);
-
+      readFonts(renderer);
       renderer.setDocumentFromString(htmlText.toString());
       renderer.layout();
       renderer.createPDF(os);
       byte[] pdfAsBytes = os.toByteArray();
       os.close();
       future.complete(Buffer.buffer(pdfAsBytes));
-    } catch (IOException | DocumentException e) {
+    } catch (IOException | DocumentException | NoSuchFileException e) {
       future.fail(e);
     }
 
+  }
+
+  private void readFonts(ITextRenderer renderer) throws NoSuchFileException, DocumentException, IOException {
+    if (fontsDir != null) {
+      List<String> children = FileSystemUtil.getChildren(getVertx(), fontsDir,
+          child -> child.toLowerCase().endsWith(".otf") || child.toLowerCase().endsWith(".ttf"));
+      for (String child : children) {
+        renderer.getFontResolver().addFont(child, true);
+      }
+    }
   }
 
   private boolean succeeded(RoutingContext context, AsyncResult<?> res) {
@@ -158,6 +174,7 @@ public class Html2PdfController extends AbstractController {
   @Override
   public void initProperties(Properties props) {
     template = readProperty(props, TEMPLATE_NAME_PROP, null, false);
+    fontsDir = readProperty(props, FONT_PATH_PROP, null, false);
     templateEngine = ThymeleafTemplateController.createTemplateEngine(props);
     templateDirectory = ThymeleafTemplateController.getTemplateDirectory(props);
   }

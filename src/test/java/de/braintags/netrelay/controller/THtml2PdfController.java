@@ -49,13 +49,35 @@ public class THtml2PdfController extends NetRelayBaseTest {
     }
   }
 
+  @Test
+  public void useEmbeddedFontes(TestContext context) {
+    try {
+      resetRoutes("testResources");
+      String url = "/htmlConvert/test.pdf";
+      Buffer responseBuffer = Buffer.buffer();
+      testRequest(context, HttpMethod.POST, url, req -> {
+      } , resp -> {
+        LOGGER.info("RESPONSE: " + resp.content);
+        context.assertTrue(resp.content.contains("%PDF-"), "not a pdf");
+      } , 200, "OK", null);
+    } catch (Exception e) {
+      context.fail(e);
+    }
+  }
+
   @Override
   protected void modifySettings(TestContext context, Settings settings) {
     super.modifySettings(context, settings);
     RouterDefinition def = defineRouterDefinition(Html2PdfController.class, "/htmlConvert/test.pdf");
     def.getHandlerProperties().put(ThymeleafTemplateController.TEMPLATE_DIRECTORY_PROPERTY, "testTemplates");
-
     settings.getRouterDefinitions().addAfter(BodyController.class.getSimpleName(), def);
+  }
+
+  private void resetRoutes(String fontDir) throws Exception {
+    RouterDefinition def = netRelay.getSettings().getRouterDefinitions()
+        .getNamedDefinition(Html2PdfController.class.getSimpleName());
+    def.getHandlerProperties().put(Html2PdfController.FONT_PATH_PROP, fontDir);
+    netRelay.resetRoutes();
   }
 
 }
