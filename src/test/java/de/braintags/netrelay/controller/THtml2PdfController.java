@@ -12,7 +12,17 @@
  */
 package de.braintags.netrelay.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.junit.Test;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.itextpdf.text.DocumentException;
 
 import de.braintags.netrelay.NetRelayBaseTest;
 import de.braintags.netrelay.controller.impl.BodyController;
@@ -35,6 +45,31 @@ public class THtml2PdfController extends NetRelayBaseTest {
       .getLogger(THtml2PdfController.class);
 
   @Test
+  public void writeToFile1(TestContext context) throws Exception {
+    writeToFile(context, "test");
+  }
+
+  @Test
+  public void writeToFile2(TestContext context) throws Exception {
+    writeToFile(context, "html2Pdf");
+  }
+
+  @Test
+  public void writeToFile3(TestContext context) throws Exception {
+    writeToFile(context, "pageBreaks");
+  }
+
+  private void writeToFile(TestContext context, String inName) throws Exception {
+    File inFile = new File("testTemplates/htmlConvert/" + inName + ".html");
+    context.assertTrue(inFile.exists());
+    File outFile = new File("tmp/" + inName + ".pdf");
+    OutputStream out = new FileOutputStream(outFile);
+    InputStream in = new FileInputStream(inFile);
+    createPdf(out, inFile);
+    context.assertTrue(outFile.exists());
+  }
+
+  @Test
   public void useTemplateFromPath(TestContext context) {
     try {
       String url = "/htmlConvert/test.pdf";
@@ -47,6 +82,15 @@ public class THtml2PdfController extends NetRelayBaseTest {
     } catch (Exception e) {
       context.fail(e);
     }
+  }
+
+  public static void createPdf(OutputStream out, File file) throws Exception, DocumentException, IOException {
+    ITextRenderer renderer = new ITextRenderer();
+    // readFonts(renderer);
+    renderer.setDocument(file);
+    renderer.layout();
+    renderer.createPDF(out, true);
+    out.close();
   }
 
   @Test
