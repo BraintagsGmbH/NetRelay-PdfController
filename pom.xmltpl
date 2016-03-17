@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>netrelayPdfController</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>${NETRELAY_PDF_CONTROLLER_VERSION}</version>
 	<packaging>jar</packaging>
 
 	<name>netrelayPdfController</name>
@@ -11,12 +11,12 @@
 	<parent>
 		<groupId>de.braintags</groupId>
 		<artifactId>btVertxBasePOM</artifactId>
-		<version>10-SNAPSHOT</version>
+		<version>${BT_BASE_VERSION}</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<netrelay.version>10.0.0-SNAPSHOT</netrelay.version>
+		<netrelay.version>${NETRELAY_VERSION}</netrelay.version>
 		<maven.test.skip>false</maven.test.skip>
 		<doc.skip>false</doc.skip>
 		<source.skip>false</source.skip>
