@@ -14,8 +14,8 @@ import com.itextpdf.text.DocumentException;
 
 import de.braintags.io.vertx.util.exception.NoSuchFileException;
 import de.braintags.io.vertx.util.file.FileSystemUtil;
+import de.braintags.netrelay.controller.ThymeleafTemplateController;
 import de.braintags.netrelay.controller.impl.AbstractController;
-import de.braintags.netrelay.controller.impl.ThymeleafTemplateController;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

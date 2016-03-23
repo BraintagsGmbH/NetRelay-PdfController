@@ -16,6 +16,7 @@
 
 	<properties>
 		<netrelay.version>${NETRELAY_VERSION}</netrelay.version>
+		<netrelay-controller.version>${NETRELAY_CONTROLLER_VERSION}</netrelay-controller.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.test.skip>false</maven.test.skip>
@@ -35,6 +36,20 @@
 			<groupId>de.braintags</groupId>
 			<artifactId>netrelay</artifactId>
 			<version>${netrelay.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.braintags</groupId>
+			<artifactId>NetRelayController</artifactId>
+			<version>${netrelay-controller.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.braintags</groupId>
+			<artifactId>NetRelayController</artifactId>
+			<version>${netrelay-controller.version}</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
