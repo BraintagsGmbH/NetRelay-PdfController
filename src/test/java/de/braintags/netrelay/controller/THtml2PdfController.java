@@ -24,7 +24,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.text.DocumentException;
 
-import de.braintags.netrelay.controller.impl.BodyController;
 import de.braintags.netrelay.controller.template.Html2PdfController;
 import de.braintags.netrelay.init.Settings;
 import de.braintags.netrelay.routing.RouterDefinition;

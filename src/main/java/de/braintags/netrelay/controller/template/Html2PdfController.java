@@ -14,8 +14,8 @@ import com.itextpdf.text.DocumentException;
 
 import de.braintags.io.vertx.util.exception.NoSuchFileException;
 import de.braintags.io.vertx.util.file.FileSystemUtil;
+import de.braintags.netrelay.controller.AbstractController;
 import de.braintags.netrelay.controller.ThymeleafTemplateController;
-import de.braintags.netrelay.controller.impl.AbstractController;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -120,7 +120,7 @@ public class Html2PdfController extends AbstractController {
       } catch (Exception e) {
         future.fail(e);
       }
-    } , result -> {
+    }, result -> {
       if (result.failed()) {
         handler.handle(Future.failedFuture(result.cause()));
       } else {
@@ -190,7 +190,7 @@ public class Html2PdfController extends AbstractController {
   /*
    * (non-Javadoc)
    * 
-   * @see de.braintags.netrelay.controller.impl.AbstractController#initProperties(java.util.Properties)
+   * @see de.braintags.netrelay.controller.AbstractController#initProperties(java.util.Properties)
    */
   @Override
   public void initProperties(Properties props) {
