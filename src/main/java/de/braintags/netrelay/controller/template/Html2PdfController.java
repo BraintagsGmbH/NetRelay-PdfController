@@ -96,7 +96,7 @@ public class Html2PdfController extends AbstractController {
    * @see io.vertx.core.Handler#handle(java.lang.Object)
    */
   @Override
-  public void handle(RoutingContext context) {
+  public void handleController(RoutingContext context) {
     createTemplateContent(context, tc -> {
       if (succeeded(context, tc)) {
         convert(tc.result(), cr -> {
